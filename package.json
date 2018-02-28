@@ -1,0 +1,24 @@
+{
+  "name": "logs",
+  "version": "1.0.0",
+  "description": "Módulo de logs",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run lint && ava tests/logs-tests.js --verbose",
+    "setup": "node setup",
+    "lint": "semistandard"
+  },
+  "author": "Omar Gutiérrez Condori <ogutierrez@agetic.gob.bo>",
+  "license": "MIT",
+  "dependencies": {
+    "common": "file:../common",
+    "defaults": "^1.0.3",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.35.0"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "semistandard": "^12.0.1"
+  }
+}
