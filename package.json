@@ -1,5 +1,5 @@
 {
-  "name": "logs",
+  "name": "app-logs",
   "version": "1.0.0",
   "description": "Módulo de logs",
   "main": "index.js",
