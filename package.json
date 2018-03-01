@@ -1,6 +1,6 @@
 {
   "name": "app-logs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Módulo de logs",
   "main": "index.js",
   "scripts": {
