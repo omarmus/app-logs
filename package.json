@@ -8,10 +8,13 @@
     "setup": "node setup",
     "lint": "semistandard"
   },
-  "author": "Omar Gutiérrez Condori <ogutierrez@agetic.gob.bo>",
+  "author": "Omar Gutiérrez Condori <omargc.mus@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omarmus/app-logs.git"
+  },
   "license": "MIT",
   "dependencies": {
-    "common": "file:../common",
     "defaults": "^1.0.3",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
@@ -20,5 +23,9 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "semistandard": "^12.0.1"
+  },
+  "engines": {
+    "node": ">= 7.6"
   }
+  
 }
