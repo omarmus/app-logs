@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('base:log');
+const chalk = require('chalk');
 const { getQuery } = require('./util');
 
 module.exports = function logsServices (logs, Sequelize) {
@@ -134,8 +134,7 @@ module.exports = function logsServices (logs, Sequelize) {
     try {
       return createOrUpdate(data);
     } catch (e) {
-      debug('ERROR LOG:', e.message);
-      console.log('ERROR LOG:', e.message, e);
+      console.error(chalk.red('ERROR LOG:'), e.message, e);
     }
   }
 
@@ -153,8 +152,7 @@ module.exports = function logsServices (logs, Sequelize) {
     try {
       return createOrUpdate(data);
     } catch (e) {
-      debug('ADVERTENCIA LOG:', e.message);
-      console.log('ADVERTENCIA LOG:', e.message);
+      console.warn(chalk.yellow('WARNING LOG:'), e.message);
     }
   }
 
@@ -172,8 +170,7 @@ module.exports = function logsServices (logs, Sequelize) {
     try {
       return createOrUpdate(data);
     } catch (e) {
-      debug('INFO LOG:', e.message);
-      console.log('INFO LOG:', e.message);
+      console.info(chalk.cyan('INFO LOG:'), e.message);
     }
   }
 

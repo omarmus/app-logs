@@ -1,30 +1,44 @@
 # Módulo logs
 
+Creación, búsqueda y listado de logs registrandolo en una tabla con Sequelize y Postgresql
+
+## Requisitos
+- Nodejs 7.6 en adelante
+
 ## Modo de uso
 
 ``` bash
 # Instalando librería
-npm install file:../logs # La ubicación puede variar de acuerdo a donde se lo instale
-
+npm install app-logs --save
 ```
 
 Instanciando el módulo logs en un proyecto
 ``` js
-const Logs = require('logs');
-const logs = await Logs(config.db).catch(errors.handleFatalError);
+const Logs = require('app-logs');
+const config = {
+  database: 'postgres',
+  username: 'postgres',
+  password: 'postgres',
+  host: 'localhost'
+};
 
-// Mensaje de error
-logs.error('Mensaje de error');
+// Para usar await debe estar dentro una función async
+const logs = await Logs(config).catch(err => console.error(err));
 
-// Mensaje de info
-logs.info('Mensaje de info');
+// Message error
+logs.error('Message error');
 
-// Mensaje de warning
-logs.warning('Mensaje de warning');
+// Message info
+logs.info('Message info');
 
+// Message warning
+logs.warning('Message warning');
+
+// Lista completa de logs, puede recibir parámetros de búsqueda entre otras opciones
+const list = await logs.findAll();
 ```
 
-## Instalando Node.js v8.x para desarrollo
+## Instalando Node.js v8.x para el modo desarrollo
 
 NOTA.- Debian Wheezy no soporta Node 8
 
@@ -46,7 +60,6 @@ Siga los siguientes pasos:
 # 1. Instalar dependencias
 npm install
 
-# 2. Iniciar el servidor del proyecto en http://localhost:4000
-npm run dev
-
+# 2. Correr test de prueba, configurar la conexión de la base de datos en el archivo src/util.js
+npm test
 ```

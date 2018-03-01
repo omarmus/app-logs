@@ -1,14 +1,14 @@
 'use strict';
 
 const test = require('ava');
-const { config, errors } = require('common');
+const { config, handleFatalError } = require('../src/util');
 const Log = require('../');
 
 let logs;
 
 test.beforeEach(async () => {
   if (!logs) {
-    logs = await Log(config.db).catch(errors.handleFatalError);
+    logs = await Log(config).catch(handleFatalError);
   }
 });
 
