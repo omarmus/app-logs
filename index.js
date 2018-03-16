@@ -3,6 +3,7 @@
 const defaults = require('defaults');
 const Sequelize = require('sequelize');
 const services = require('./src/services');
+const Graphql = require('./src/graphql');
 
 module.exports = async function (config) {
   config = defaults(config, {
@@ -26,5 +27,8 @@ module.exports = async function (config) {
   await sequelize.sync();
 
   // Cargando los servicios de logs
-  return services(logs, Sequelize);
+  let Services = services(logs, Sequelize);
+  Services.graphql = Graphql(Services);
+
+  return Services;
 };

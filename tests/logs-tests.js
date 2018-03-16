@@ -65,7 +65,7 @@ test.serial('Log#createOrUpdate - update', async t => {
   const data = {
     id: test.idLog,
     nivel: 'ERROR',
-    tipo: 'DOMINIO',
+    tipo: 'DOMINIO-TEST',
     mensaje: 'Sequelize bd',
     ip: '255.255.255.254',
     referencia: 'sequelize bd error',
@@ -78,7 +78,7 @@ test.serial('Log#createOrUpdate - update', async t => {
 });
 
 test.serial('Log#findAll#filter#tipo', async t => {
-  let lista = await logs.findAll({ tipo: 'DOMINIO' });
+  let lista = await logs.findAll({ tipo: 'DOMINIO-TEST' });
 
   t.is(lista.count, 1, 'Se tiene 1 registros en la bd');
 });
@@ -99,6 +99,12 @@ test.serial('Log#findAll#filter#fecha', async t => {
   let lista = await logs.findAll({ fecha: new Date(2015, 0, 1) });
 
   t.is(lista.count, 2, 'Se tiene 2 registros en la bd');
+});
+
+test.serial('Parametro#Graphql - lista', async t => {
+  let lista = await logs.graphql.resolvers.Query.logs(null, {}, { permissions: ['logs:read'] });
+
+  t.true(lista.count >= 2, 'Se tiene 2 registros en la bd');
 });
 
 test.serial('Log#delete', async t => {

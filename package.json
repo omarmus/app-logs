@@ -17,6 +17,7 @@
   "dependencies": {
     "chalk": "^2.3.2",
     "defaults": "^1.0.3",
+    "graphql": "^0.13.1",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.35.0"

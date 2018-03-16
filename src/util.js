@@ -2,6 +2,13 @@
 
 const chalk = require('chalk');
 
+const config = {
+  database: 'base',
+  username: 'omarmus',
+  password: 'omar',
+  host: 'localhost'
+};
+
 function getQuery (options = {}) {
   let query = {
     raw: true
@@ -25,12 +32,23 @@ function getQuery (options = {}) {
   return query;
 }
 
-const config = {
-  database: 'postgres',
-  username: 'postgres',
-  password: 'postgres',
-  host: 'localhost'
-};
+function permissions (context, permission) {
+  if (context.permissions) {
+    let type;
+    permission = permission.split('|');
+
+    for (let i in permission) {
+      if (context.permissions.indexOf(permission[i]) !== -1) {
+        return true;
+      } else {
+        type = permission[i].split(':')[1].toUpperCase();
+      }
+    }
+    throw new Error(`NOT_AUTHORIZED:${type || 'READ'}`);
+  } else {
+    throw new Error('NOT_AUTHORIZED:READ');
+  }
+}
 
 function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`);
@@ -41,5 +59,6 @@ function handleFatalError (err) {
 module.exports = {
   getQuery,
   config,
-  handleFatalError
+  handleFatalError,
+  permissions
 };
