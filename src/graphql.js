@@ -25,16 +25,8 @@ module.exports = Log => {
       ip: String
       # fecha de creación del log
       fecha: DateL!
-      # id de usuario
-      id_usuario: Int
-      # Username del usuario
-      usuario_usuario: String
-      # Nombres Usuario
-      usuario_nombres: String
-      # Primer apellido
-      usuario_primer_apellido: String
-      # Segundo apellid
-      usuario_segundo_apellido: String
+      # Usuario que registró el log
+      usuario: String      
     }
 
     # Tipos de estado del log
@@ -76,8 +68,8 @@ module.exports = Log => {
         ip: String,
         # Buscar por fecha de creación
         fecha: DateL,
-        # Buscar por ID usuario
-        id_usuario: String      
+        # Buscar por usuario
+        usuario: String
       ): Logs
       # Obtener un log
       log(id: Int!): Log
