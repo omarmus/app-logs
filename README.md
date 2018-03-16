@@ -1,6 +1,6 @@
 # Módulo logs
 
-Creación, búsqueda y listado de logs registrandolo en una tabla con Sequelize y Postgresql
+Creación, búsqueda y listado de logs registrandolo en una tabla con Sequelize, Postgresql y GraphQL.
 
 ## Requisitos
 - Nodejs 7.6 en adelante
