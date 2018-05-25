@@ -117,7 +117,11 @@ module.exports = function logsServices (logs, Sequelize) {
       text.push(error.stack);
     }
 
-    return text.join('\n');
+    if (text.length) {
+      return text.join('\n');
+    } else {
+      return JSON.stringify(error);
+    }
   }
 
   async function error (mensaje = 'Error desconocido', tipo = '', error, usuario, ip) {
