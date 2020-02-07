@@ -3,9 +3,9 @@
 const chalk = require('chalk');
 
 const config = {
-  database: 'postgres',
-  username: 'postgres',
-  password: 'postgres',
+  database: 'base-backend',
+  username: 'developer',
+  password: 'developer1',
   host: 'localhost'
 };
 

@@ -6,9 +6,68 @@ const { getQuery } = require('./util');
 module.exports = function logsServices (logs, Sequelize) {
   const Op = Sequelize.Op;
 
+  if (logs.useWinston) {
+    const info = async (mensaje, tipo = '', referencia, usuario, ip) => {
+      try {
+        let r = logs.log({
+          level: 'info',
+          fecha: new Date(),
+          message: mensaje,
+          tipo,
+          referencia,
+          usuario,
+          ip
+        });
+        return r;
+      } catch (e) {
+        console.info(chalk.red('INFO LOG:'), e.message, e);
+        return undefined;
+      }
+    };
+
+    const error = async (mensaje, tipo = '', referencia, usuario, ip) => {
+      try {
+        let r = logs.log({
+          level: 'error',
+          fecha: new Date(),
+          message: mensaje,
+          tipo,
+          referencia,
+          usuario,
+          ip
+        });
+        return r;
+      } catch (e) {
+        console.error(chalk.blue('ERROR LOG:'), e.message, e);
+        return undefined;
+      }
+    };
+
+    const warning = async (mensaje, tipo = '', referencia, usuario, ip) => {
+      try {
+        let r = logs.log({
+          level: 'warn',
+          fecha: new Date(),
+          message: mensaje,
+          tipo,
+          referencia,
+          usuario,
+          ip
+        });
+        return r;
+      } catch (e) {
+        console.error(chalk.yellow('WARNING LOG:'), e.message, e);
+        return undefined;
+      }
+    };
+    return {
+      info,
+      error,
+      warning
+    };
+  }
   function findAll (params = {}) {
     let query = getQuery(params);
-
     query.where = {};
 
     if (params.nivel) {
