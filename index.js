@@ -4,31 +4,110 @@ const defaults = require('defaults');
 const Sequelize = require('sequelize');
 const services = require('./src/services');
 const Graphql = require('./src/graphql');
+const winston = require('winston');
+const path = require('path');
 
 module.exports = async function (config) {
-  config = defaults(config, {
-    dialect: 'postgres',
-    pool: {
-      max: 10,
-      min: 0,
-      idle: 10000
+  let logs;
+  
+  // analizando config, formato esperado
+  // TODO: borrar lo siguiente podria ser no necesario
+  /*
+  {
+    // para mostrar los logs tambien en la consola
+    console: false,
+    
+    // Donde se guardan los logs:
+    // - database: Para guardar logs en base de datos
+    // - filesystem: Para guardar logs en sistema de archivos
+    storage: 'database',
+
+    // Las siguientes opciones son para cuando se usa storage = 'filesystem'
+    outputDirectory: './logs',
+
+    // formato de logs, las mismas opciones de winston (combined, interpolation, json
+    format: 'combined',
+
+    // nivel de verbosidad, posibles: error, info, warning, debug
+    level: 'info',
+  }
+  */
+  const logsConfig = config.logsConfig;
+
+  if (logsConfig.storage == 'filesystem') {
+    // preparando configuracion de winston para escribir logs en archivos de texto
+    let format = winston.format.combined;
+    let outputDirectory = logsConfig.outputDirectory !== undefined ? logsConfig.outputDirectory : './logs';
+    let storage = logsConfig.outputDirectory !== undefined ? logsConfig.outputDirectory : 'database';
+    let level = logsConfig.level !== undefined ? logsConfig.level : 'info';
+    let transports = [];
+
+    transports.push(
+      new winston.transports.File.({
+        filename: path.join(outputDirectory, 'logs.log'),
+        level: level
+      })
+    );
+    if (logsConfig.console) {
+      transports.push(new winston.transports.Console.(
+        {
+          level,
+          format: winston.format.combine(
+            format.colorize(),
+            format.simple()
+          )
+        }
+      ));
     }
-  });
 
-  let sequelize = new Sequelize(config);
+    if (logsConfig.format) {
+      if (logsConfig.format == 'combined') {
+        format = winston.format.combine(
+          winston.format.timestamp({
+            format: 'DD-MM-YYYY HH:mm:ss'
+          }),
+          winston.format.errors({ stack: true }),
+          winston.format.splat(),
+          winston.format.json()
+        );
+      } else if (logsConfig.format == 'json') {
+        format = winston.format.json;
+      }
+    }
 
-  // Cargando modelo
-  const logs = sequelize.import('src/model');
+    // creando la instancia de winston
+    logs = winston.createLogger({
+      level,
+      format,
+      transports
+    });
 
-  // Verificando conexión con la BD
-  await sequelize.authenticate();
+  } else if (logsConfig.storage == 'database') {
+    
+    config = defaults(config, {
+      dialect: 'postgres',
+      pool: {
+        max: 10,
+        min: 0,
+        idle: 10000
+      }
+    });
 
-  // Creando las tablas
-  await sequelize.sync();
+    let sequelize = new Sequelize(config);
 
+    // Cargando modelo
+    logs = sequelize.import('src/model');
+
+    // Verificando conexión con la BD
+    await sequelize.authenticate();
+
+    // Creando las tablas
+    await sequelize.sync();
+  }
+  
   // Cargando los servicios de logs
   let Services = services(logs, Sequelize);
   Services.graphql = Graphql(Services);
 
-  return Services;
+  return Services;    
 };
