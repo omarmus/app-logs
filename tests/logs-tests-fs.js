@@ -2,24 +2,25 @@
 
 const test = require('ava');
 const util = require('../src/util');
-const { config, handleFatalError } = require('../src/util');
+const { handleFatalError } = require('../src/util');
 const Log = require('../');
 
 let logs;
 
 test.beforeEach(async () => {
-  console.log(config);
   if (!logs) {
     logs = await Log({
       logsConfig: {
-        console: true, // también mostrara en la consola de los tests
+        console: false, // también mostrara en la consola de los tests
         storage: 'filesystem',
         outputDirectory: './logs',
+        outputFilename: 'logs-tests.log',
         format: 'combined',
         level: 'info'
       }
     }).catch(handleFatalError);
   }
+  logs.info('testing log', 'prueba', 'ref#', 'usuario test', '0.0.0.0');
 });
 
 test.serial('Log-fs#info - create', async t => {
@@ -39,23 +40,20 @@ test.serial('Log-fs#warning - create', async t => {
 });
 
 test.serial('Log-fs#read - filter level info', async t => {
-  await logs.info('msj de prueba', 'prueba', 'ref-info', 'usuario test', '0.0.0.0');
-  await logs.info('msj de prueba', 'prueba', 'ref-info', 'usuario test', '0.0.0.0');
   let logsRead = await util.getLogLines(
     { level: 'info' },
     50,
-    { outputDirectory: './logs' }
+    { outputDirectory: './logs', outputFilename: 'logs-tests.js' }
   );
   t.true(logsRead.length > 1);
 });
 
 test.serial('Log-fs#read - filter level info && referencia ref#', async t => {
-  await logs.info('msj de prueba', 'prueba', 'ref#', 'usuario test', '0.0.0.0');
   let logsRead = await util.getLogLines(
     { level: 'info', referencia: 'ref#' },
     50,
-    { outputDirectory: './logs' }
+    { outputDirectory: './logs', outputFilename: 'logs-tests.js' }
   );
-  console.log('LogsRead::::', logsRead);
+  // console.log('LogsRead::::', logsRead);
   t.true(logsRead.length >= 1);
 });

@@ -21,6 +21,7 @@ module.exports = async function (config) {
     storage: 'database',
     // Las siguientes opciones son para cuando se usa storage = 'filesystem'
     outputDirectory: './logs',
+    outputFilename: 'logs.log',
     // formato de logs, las mismas opciones de winston (combined, interpolation, json
     format: 'combined',
     // nivel de verbosidad, posibles: error, info, warning, debug
@@ -32,6 +33,7 @@ module.exports = async function (config) {
     // preparando configuracion de winston para escribir logs en archivos de texto
     let format = winston.format.combined;
     let outputDirectory = logsConfig.outputDirectory !== undefined ? logsConfig.outputDirectory : './logs';
+    let outputFilename = logsConfig.outputFilename !== undefined ? logsConfig.outputFilename : 'logs.log';
     let level = logsConfig.level !== undefined ? logsConfig.level : 'info';
     let transports = [];
 
@@ -40,7 +42,7 @@ module.exports = async function (config) {
     }
     transports.push(
       new winston.transports.File({
-        filename: path.join(outputDirectory, 'logs.log'),
+        filename: path.join(outputDirectory, outputFilename),
         level: level
       })
     );

@@ -76,7 +76,7 @@ function handleFatalError (err) {
 async function getLogLines (filter = {}, maxLines = 50, logsConfig) {
   return new Promise((resolve, reject) => {
     const rl = readline.createInterface({
-      input: fs.createReadStream(path.join(logsConfig.outputDirectory, 'logs.log')),
+      input: fs.createReadStream(path.join(logsConfig.outputDirectory, logsConfig.outputFilename)),
       crlfDelay: Infinity
     });
     let logsFiltered = [];
