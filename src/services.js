@@ -63,7 +63,8 @@ module.exports = function logsServices (logs, Sequelize) {
     return {
       info,
       error,
-      warning
+      warning,
+      logsConfig: logs.logsConfig
     };
   }
   function findAll (params = {}) {

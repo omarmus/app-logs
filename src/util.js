@@ -75,10 +75,17 @@ function handleFatalError (err) {
  */
 async function getLogLines (filter = {}, maxLines = 50, logsConfig) {
   return new Promise((resolve, reject) => {
-    const rl = readline.createInterface({
-      input: fs.createReadStream(path.join(logsConfig.outputDirectory, logsConfig.outputFilename)),
-      crlfDelay: Infinity
-    });
+    let rl;
+    console.log('path.join(logsConfig.outputDirectory, logsConfig.outputFilename):', path.join(logsConfig.outputDirectory, logsConfig.outputFilename));
+    try {
+      rl = readline.createInterface({
+        input: fs.createReadStream(path.join(process.cwd(), logsConfig.outputDirectory, logsConfig.outputFilename)),
+        crlfDelay: Infinity
+      });
+    } catch (e) {
+      console.log('Error opening log file:', e);
+      reject(e);
+    }
     let logsFiltered = [];
     let lineCounter = 0;
     // reading line by line
