@@ -1,6 +1,9 @@
 'use strict';
 
 const chalk = require('chalk');
+const path = require('path');
+const fs = require('fs');
+const readline = require('readline');
 
 const config = {
   database: 'base-backend',
@@ -56,9 +59,65 @@ function handleFatalError (err) {
   process.exit(1);
 }
 
+// ---- usados para logs en el sistema de archivos
+/**
+ * Lee lineas del archivo `filter'
+ * @param {obj} filter (opcional): filter Object, can have attributes:
+ * {
+ *   level,  // error, info, warn
+ *   fecha,  // (string)
+ *   referencia, // (string)
+ *   usuario,    // (string)
+ *   timestamp   // (string) formato: DD-MM-AAAA HH:mm:ss
+ * }
+ * @param {int} maxLines (opcional): Numero de lineas de log a leer
+ * @param {obj} logsConfig: Objeto de configuraciones de logs
+ */
+async function getLogLines (filter = {}, maxLines = 50, logsConfig) {
+  return new Promise((resolve, reject) => {
+    const rl = readline.createInterface({
+      input: fs.createReadStream(path.join(logsConfig.outputDirectory, 'logs.log')),
+      crlfDelay: Infinity
+    });
+    let logsFiltered = [];
+    let lineCounter = 0;
+    // reading line by line
+    rl.on('line', (line) => {
+      if (lineCounter < maxLines) {
+        try {
+          let logObj = JSON.parse(line);
+          // aplicando filtro
+          let cumple = true;
+          for (let key of Object.keys(filter)) {
+            if (logObj[key] !== filter[key]) {
+              cumple = false;
+              break;
+            }
+          }
+          if (cumple || Object.keys(filter).length === 0) {
+            logsFiltered.push(line);
+          }
+        } catch (e) {
+          console.error(`${chalk.yellow('[error reading logs]')} ${e.message}`);
+          reject(e.message);
+        }
+        lineCounter++;
+        // console.log(`Line from file: ${line}`);
+      } else {
+        rl.close();
+      }
+    });
+    // end
+    rl.on('close', (line) => {
+      resolve(logsFiltered);
+    });
+  });
+}
+
 module.exports = {
   getQuery,
   config,
   handleFatalError,
-  permissions
+  permissions,
+  getLogLines
 };

@@ -9,7 +9,7 @@ module.exports = function logsServices (logs, Sequelize) {
   if (logs.useWinston) {
     const info = async (mensaje, tipo = '', referencia, usuario, ip) => {
       try {
-        let r = logs.log({
+        let r = await logs.log({
           level: 'info',
           fecha: new Date(),
           message: mensaje,
@@ -27,7 +27,7 @@ module.exports = function logsServices (logs, Sequelize) {
 
     const error = async (mensaje, tipo = '', referencia, usuario, ip) => {
       try {
-        let r = logs.log({
+        let r = await logs.log({
           level: 'error',
           fecha: new Date(),
           message: mensaje,

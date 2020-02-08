@@ -11,7 +11,6 @@ const fs = require('fs');
 module.exports = async function (config) {
   let logs;
   // analizando config, formato esperado
-  // TODO: borrar lo siguiente podria ser no necesario
   /*
   {
     // para mostrar los logs tambien en la consola
