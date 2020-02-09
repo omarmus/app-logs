@@ -9,7 +9,10 @@ const config = {
   database: 'base-backend',
   username: 'developer',
   password: 'developer1',
-  host: 'localhost'
+  host: 'localhost',
+  logsConfig: {
+    storage: 'database'
+  }
 };
 
 function getQuery (options = {}) {
@@ -102,7 +105,7 @@ async function getLogLines (filter = {}, maxLines = 50, logsConfig) {
             }
           }
           if (cumple || Object.keys(filter).length === 0) {
-            logsFiltered.push(line);
+            logsFiltered.push(logObj);
           }
         } catch (e) {
           console.error(`${chalk.yellow('[error reading logs]')} ${e.message}`);

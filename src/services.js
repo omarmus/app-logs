@@ -1,7 +1,7 @@
 'use strict';
 
 const chalk = require('chalk');
-const { getQuery } = require('./util');
+const { getQuery, getLogLines } = require('./util');
 
 module.exports = function logsServices (logs, Sequelize) {
   const Op = Sequelize.Op;
@@ -60,10 +60,27 @@ module.exports = function logsServices (logs, Sequelize) {
         return undefined;
       }
     };
+
+    const findAll = async (params = {}, maxLines = 50) => {
+      try {
+        let r = await getLogLines(params, maxLines, logs.logsConfig);
+        return {
+          code: 1,
+          data: {
+            count: r.length,
+            rows: r
+          }
+        };
+      } catch (e) {
+        throw e;
+      }
+    };
+
     return {
       info,
       error,
       warning,
+      findAll,
       logsConfig: logs.logsConfig
     };
   }

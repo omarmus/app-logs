@@ -50,11 +50,29 @@ test.serial('Log-fs#filter - level: info', async t => {
 });
 
 test.serial('Log-fs#filter - level: info, referencia: ref1', async t => {
-  console.log('logs filter2;;');
   let logsRead = await util.getLogLines(
     { level: 'info', referencia: 'ref1' },
     50,
     { outputDirectory: './logs', outputFilename: 'logs-tests.log' }
   );
   t.true(logsRead.length >= 1);
+});
+
+test.serial('Log-fs#findAll', async t => {
+  let r = await logs.findAll();
+  // console.log('r::', r);
+  t.true(r.code === 1);
+  t.true(r.data.count >= 1);
+});
+
+test.serial('Log-fs#findAll - level:info', async t => {
+  let r = await logs.findAll({ level: 'info' });
+  t.true(r.code === 1);
+  t.true(r.data.count >= 1);
+});
+
+test.serial('Log-fs#findAll - level:info, referencia: ref2', async t => {
+  let r = await logs.findAll({ level: 'info', referencia: 'ref2' });
+  t.true(r.code === 1);
+  t.true(r.data.count >= 1);
 });
