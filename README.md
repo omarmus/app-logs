@@ -1,6 +1,6 @@
 # Módulo logs
 
-Creación, búsqueda y listado de logs, tiene dos modos de operación:
+Creación, búsqueda y listado de logs, el guardado de logs se puede escoger entre base de datos o sistema de archivos:
 
 1. **Logs en base de datos** (por defecto): Registra los logs en una tabla con Sequelize, Postgresql y GraphQL.
 2. **Logs en sistema de archivos**: Registra los logs en un archivo del sistema de archivos.
@@ -27,15 +27,15 @@ const config = {
 };
 
 // en caso de usar logs en el sistema de archivos se usa:
-/*
 const config = {
   logsConfig: {
+    // indica que los logs se guardan en el sistema de archivos
+    storage: 'filesystem',
     // para mostrar los logs tambien en la consola
     console: false,
-    storage: 'filesystem',
-	// directorio con los logs
+    // directorio con los logs
     outputDirectory: './logs',
-	// nombre de archivo de logs
+    // nombre de archivo de logs
     outputFilename: 'logs.log',
     // formato de logs, con algunas de las opciones de winston (combined, interpolation, json)
     format: 'combined',
@@ -63,6 +63,21 @@ const list = await logs.findAll();
 ## Instalando Node.js v8.x para el modo desarrollo
 
 NOTA.- Debian Wheezy no soporta Node 8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ``` bash
 # Para Ubuntu
