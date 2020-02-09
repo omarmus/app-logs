@@ -11,6 +11,7 @@ module.exports = function logsServices (logs, Sequelize) {
       try {
         let r = await logs.log({
           level: 'info',
+          nivel: 'INFO',
           fecha: new Date(),
           message: mensaje,
           tipo,
@@ -29,6 +30,7 @@ module.exports = function logsServices (logs, Sequelize) {
       try {
         let r = await logs.log({
           level: 'error',
+          nivel: 'ERROR',
           fecha: new Date(),
           message: mensaje,
           tipo,
@@ -47,6 +49,7 @@ module.exports = function logsServices (logs, Sequelize) {
       try {
         let r = logs.log({
           level: 'warn',
+          nivel: 'ADVERTENCIA',
           fecha: new Date(),
           message: mensaje,
           tipo,

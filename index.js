@@ -62,8 +62,9 @@ module.exports = async function (config) {
 
       if (!fs.existsSync(path.join(outputDirectory))) {
         fs.mkdirSync(path.join(outputDirectory));
-        fs.closeSync(fs.openSync(path.join(logs.logsConfig.outputDirectory, logs.logsConfig.outputFilename), 'w'));
       }
+      fs.closeSync(fs.openSync(path.join(logsConfig.outputDirectory, logsConfig.outputFilename), 'a'));
+
       transports.push(
         new winston.transports.File({
           filename: path.join(outputDirectory, outputFilename),
