@@ -9,10 +9,7 @@ const config = {
   database: 'base-backend',
   username: 'developer',
   password: 'developer1',
-  host: 'localhost',
-  logsConfig: {
-    storage: 'database'
-  }
+  host: 'localhost'
 };
 
 function getQuery (options = {}) {
