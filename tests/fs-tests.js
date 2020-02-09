@@ -76,3 +76,19 @@ test.serial('Log-fs#findAll - level:info, referencia: ref2', async t => {
   t.true(r.code === 1);
   t.true(r.data.count >= 1);
 });
+
+test.serial('Parametro#Graphql - lista', async t => {
+  let lista = await logs.graphql.resolvers.Query.logs(null, {}, { permissions: ['logs:read'] });
+  // console.log('lista::::', lista);
+  // t.true(lista.count >= 2, 'Se tiene 2 registros en la bd');
+  t.true(lista.data.count >= 2, 'Se tiene 2 registros en la bd');
+});
+
+test.serial('Parametro#Graphql - graphql query', async t => {
+  let lista = await logs.graphql.resolvers.Query.logs(
+    null,
+    { limit: 10, page: 1, order: '-fecha' },
+    { permissions: ['logs:read'] });
+  // t.true(lista.count >= 2, 'Se tiene 2 registros en la bd');
+  t.true(lista.data.count >= 2, 'Se tiene 2 registros en la bd');
+});

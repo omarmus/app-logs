@@ -76,7 +76,7 @@ function handleFatalError (err) {
 async function getLogLines (filter = {}, maxLines = 50, logsConfig) {
   return new Promise((resolve, reject) => {
     let rl;
-    console.log('path.join(logsConfig.outputDirectory, logsConfig.outputFilename):', path.join(logsConfig.outputDirectory, logsConfig.outputFilename));
+    // ReadStream to read file
     try {
       rl = readline.createInterface({
         input: fs.createReadStream(path.join(process.cwd(), logsConfig.outputDirectory, logsConfig.outputFilename)),
@@ -121,10 +121,28 @@ async function getLogLines (filter = {}, maxLines = 50, logsConfig) {
   });
 }
 
+function getQueryFsLogs (options = {}) {
+  let query = {};
+  Object.assign(query, options);
+  if (options.limit) {
+    delete query.limit;
+    query.maxLines = options.limit;
+    if (options.page) {
+      delete query.page;
+      // query.offset = (options.page - 1) * options.limit;
+    }
+  }
+  if (options.order) {
+    delete query.order;
+  }
+  return query;
+}
+
 module.exports = {
   getQuery,
   config,
   handleFatalError,
   permissions,
-  getLogLines
+  getLogLines,
+  getQueryFsLogs
 };
