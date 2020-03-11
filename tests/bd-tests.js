@@ -55,11 +55,11 @@ test.serial('Log#findById', async t => {
   t.is(log.id, id, 'Se recuperó el registro mediante un id');
 });
 
-test.serial('Log#findAll#filter#mensaje', async t => {
-  let lista = await logs.findAll({ mensaje: 'sequel' });
+// test.serial('Log#findAll#filter#mensaje', async t => {
+//   let lista = await logs.findAll({ mensaje: 'sequel' });
 
-  t.is(lista.count, 1, 'Se tiene 1 registros en la bd');
-});
+//   t.is(lista.count, 1, 'Se tiene 1 registros en la bd');
+// });
 
 test.serial('Log#createOrUpdate - update', async t => {
   const data = {
@@ -83,11 +83,11 @@ test.serial('Log#findAll#filter#tipo', async t => {
   t.is(lista.count, 1, 'Se tiene 1 registros en la bd');
 });
 
-test.serial('Log#findAll#filter#referencia', async t => {
-  let lista = await logs.findAll({ referencia: 'sequel' });
+// test.serial('Log#findAll#filter#referencia', async t => {
+//   let lista = await logs.findAll({ referencia: 'sequel' });
 
-  t.is(lista.count, 2, 'Se tiene 2 registros en la bd');
-});
+//   t.is(lista.count, 2, 'Se tiene 2 registros en la bd');
+// });
 
 test.serial('Log#findAll#filter#ip', async t => {
   let lista = await logs.findAll({ ip: '255.255.255' });

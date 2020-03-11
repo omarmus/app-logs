@@ -1,14 +1,99 @@
 'use strict';
 
 const chalk = require('chalk');
-const { getQuery } = require('./util');
+const { getQuery, getLogLines, getQueryFsLogs } = require('./util');
 
 module.exports = function logsServices (logs, Sequelize) {
   const Op = Sequelize.Op;
 
+  if (logs.useWinston) {
+    const info = async (mensaje, tipo = '', referencia, usuario, ip) => {
+      try {
+        let r = await logs.log({
+          level: 'info',
+          nivel: 'INFO',
+          fecha: new Date(),
+          message: mensaje,
+          tipo,
+          referencia,
+          usuario,
+          ip
+        });
+        return r;
+      } catch (e) {
+        console.info(chalk.red('INFO LOG:'), e.message, e);
+        return undefined;
+      }
+    };
+
+    const error = async (mensaje, tipo = '', referencia, usuario, ip) => {
+      try {
+        let r = await logs.log({
+          level: 'error',
+          nivel: 'ERROR',
+          fecha: new Date(),
+          message: mensaje,
+          tipo,
+          referencia,
+          usuario,
+          ip
+        });
+        return r;
+      } catch (e) {
+        console.error(chalk.blue('ERROR LOG:'), e.message, e);
+        return undefined;
+      }
+    };
+
+    const warning = async (mensaje, tipo = '', referencia, usuario, ip) => {
+      try {
+        let r = logs.log({
+          level: 'warn',
+          nivel: 'ADVERTENCIA',
+          fecha: new Date(),
+          message: mensaje,
+          tipo,
+          referencia,
+          usuario,
+          ip
+        });
+        return r;
+      } catch (e) {
+        console.error(chalk.yellow('WARNING LOG:'), e.message, e);
+        return undefined;
+      }
+    };
+
+    const findAll = async (params = {}, maxLines = 50) => {
+      let query = getQueryFsLogs(params);
+      try {
+        if (query.maxLines) {
+          maxLines = query.maxLines;
+          delete query.maxLines;
+        }
+        let r = await getLogLines(query, maxLines, logs.logsConfig);
+        return {
+          code: 1,
+          data: {
+            count: r.length,
+            rows: r
+          }
+        };
+      } catch (e) {
+        throw e;
+      }
+    };
+
+    return {
+      info,
+      error,
+      warning,
+      findAll,
+      logsConfig: logs.logsConfig
+    };
+  }
   function findAll (params = {}) {
     let query = getQuery(params);
-
     query.where = {};
 
     if (params.nivel) {

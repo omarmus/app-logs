@@ -2,3 +2,9 @@ node_modules/
 .vscode/
 yarn-error.log
 npm-debug.log
+logs/
+
+## temporales creados por emacs
+*~
+\#*\#
+.\#*
