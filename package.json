@@ -20,7 +20,7 @@
     "graphql": "^0.13.1",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.35.0",
+    "sequelize": "^6.3.5",
     "winston": "^3.2.1"
   },
   "devDependencies": {
