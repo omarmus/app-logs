@@ -6,6 +6,8 @@ Creación, búsqueda y listado de logs, el guardado de logs se puede escoger ent
 2. **Logs en sistema de archivos**: Registra los logs en un archivo del sistema de archivos.
 3. **Logs en consola**: Manda los logs también a la salida estándar (**stdout**).
 
+LICENCIA: MIT License (Omar Gutiérrez C.)
+
 ## Requisitos
 - Nodejs 7.6 en adelante
 
