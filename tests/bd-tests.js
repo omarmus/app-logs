@@ -105,7 +105,7 @@ test.serial('bd#findAll#filter#tipo', async t => {
 
 test.serial('bd#findAll#filter#ip', async t => {
   let lista = await logs.findAll({ ip: '255.255.255.255' });
-  console.log(lista);
+
   t.is(lista.count, 1, 'Se tiene 1 registros en la bd');
 });
 
