@@ -4,6 +4,7 @@ Creación, búsqueda y listado de logs, el guardado de logs se puede escoger ent
 
 1. **Logs en base de datos** (por defecto): Registra los logs en una tabla con Sequelize, Postgresql y GraphQL.
 2. **Logs en sistema de archivos**: Registra los logs en un archivo del sistema de archivos.
+3. **Logs en consola**: Manda los logs también a la salida estándar (**stdout**).
 
 ## Requisitos
 - Nodejs 7.6 en adelante
@@ -15,23 +16,16 @@ Creación, búsqueda y listado de logs, el guardado de logs se puede escoger ent
 npm install app-logs --save
 ```
 
-Instanciando el módulo logs en un proyecto
+Instanciando el módulo logs en un proyecto, primero hay que definir un objeto de configuración:
 ``` js
 const Logs = require('app-logs');
-
-const config = {
-  database: 'postgres',
-  username: 'postgres',
-  password: 'postgres',
-  host: 'localhost',
-};
 
 // en caso de usar logs en el sistema de archivos se usa:
 const config = {
   logsConfig: {
     // indica que los logs se guardan en el sistema de archivos
     storage: 'filesystem',
-    // para mostrar los logs también en la consola (stdout)
+    // para mostrar los logs también en la consola (stdout) esto debería ser true
     console: false,
     // directorio con los logs
     outputDirectory: './logs',
@@ -44,37 +38,58 @@ const config = {
   }
 };
 
-// Para usar await debe estar dentro una función async
-const logs = await Logs(config).catch(err => console.error(err));
+// en caso de usar logs en base de datos bastaría:
+const config = {
+  database: 'postgres',
+  username: 'postgres',
+  password: 'postgres',
+  host: 'localhost',
+};
 
+```
+Luego iniciar el módulo.
+```js
+const logs = await Logs(config).catch(err => console.error(err));
+```
+Uso
+```js
 // Message error
-logs.error('Message error');
+await logs.error('Message error');
 
 // Message info
-logs.info('Message info');
+await logs.info('Message info');
 
 // Message warning
-logs.warning('Message warning');
+await logs.warning('Message warning');
 
+// Pasando el nivel de logs manualmente se pueden agregar detalles: 
+// - Mensaje: String - Texto del mensaje
+// - Nivel de logs: String solo con los valores "info", "warn" o "error"
+// - Referencia: String - Mas detalle del mensaje (sirve para hacer búsquedas)
+// - Usuario: String - Guardar con el nombre de un usuario
+// - Ip: String - Dirección ip
+await logs.log('Mensaje, 'info', 'ref-0', 'usuario1', '1.0.0.1');
+await logs.log('Mensaje de advertencia, 'warn', 'ref-0', 'usuario', '1.0.0.1');
+await logs.log('Mensaje de error, 'error', 'ref-0', 'usuario', '1.0.0.1');
+
+```
+Ver más ejemplos de uso en [tests](tests/).
+
+Consultar logs:
+```
 // Lista completa de logs, puede recibir parámetros de búsqueda entre otras opciones
-const list = await logs.findAll();
+let list = await logs.findAll();
+
+// Lista de logs por nivel 'info'
+list = await logs.findAll({ level: 'info'});
+
+// Lista de logs por dirección ip 127.0.0.1
+list = await logs.findAll({ ip: '127.0.0.1'});
 ```
 
-## Instalando Node.js v8.x para el modo desarrollo
+Ver más ejemplos de uso en [tests/](tests/).
 
-NOTA.- Debian Wheezy no soporta Node 8
-
-``` bash
-# Para Ubuntu
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Para Debian, instalar como root
-curl -sL https://deb.nodesource.com/setup_8.x | bash -
-apt-get install -y nodejs
-```
-
-## Instalando el proyecto
+## Ejecutando indivualmente
 
 Siga los siguientes pasos:
 
