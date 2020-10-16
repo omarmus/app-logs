@@ -5,13 +5,13 @@ const { getQuery, getLogLines, getQueryFsLogs } = require('./util');
 
 module.exports = function logsServices (logs, Sequelize) {
   const Op = Sequelize.Op;
-
+  // ----- logs en sistema de archivos -------
   if (logs.useWinston) {
-    const info = async (mensaje, tipo = '', referencia, usuario, ip) => {
+    const log = async (mensaje, level = 'info', nivel, tipo = '', referencia, usuario, ip) => {
       try {
-        let r = await logs.log({
-          level: 'info',
-          nivel: 'INFO',
+        let r = logs.log({
+          level,
+          nivel,
           fecha: new Date(),
           message: mensaje,
           tipo,
@@ -21,47 +21,24 @@ module.exports = function logsServices (logs, Sequelize) {
         });
         return r;
       } catch (e) {
-        console.info(chalk.red('INFO LOG:'), e.message, e);
+        console.error(chalk.red('LOG ERROR:', e.message, e));
         return undefined;
       }
+    };
+
+    const info = async (mensaje, tipo = '', referencia, usuario, ip) => {
+      const r = log(mensaje, 'info', 'INFO', tipo, referencia, usuario, ip);
+      return r;
     };
 
     const error = async (mensaje, tipo = '', referencia, usuario, ip) => {
-      try {
-        let r = await logs.log({
-          level: 'error',
-          nivel: 'ERROR',
-          fecha: new Date(),
-          message: mensaje,
-          tipo,
-          referencia,
-          usuario,
-          ip
-        });
-        return r;
-      } catch (e) {
-        console.error(chalk.blue('ERROR LOG:'), e.message, e);
-        return undefined;
-      }
+      const r = log(mensaje, 'error', 'ERROR', tipo, referencia, usuario, ip);
+      return r;
     };
 
     const warning = async (mensaje, tipo = '', referencia, usuario, ip) => {
-      try {
-        let r = logs.log({
-          level: 'warn',
-          nivel: 'ADVERTENCIA',
-          fecha: new Date(),
-          message: mensaje,
-          tipo,
-          referencia,
-          usuario,
-          ip
-        });
-        return r;
-      } catch (e) {
-        console.error(chalk.yellow('WARNING LOG:'), e.message, e);
-        return undefined;
-      }
+      const r = log(mensaje, 'warn', 'ADVERTENCIA', tipo, referencia, usuario, ip);
+      return r;
     };
 
     const findAll = async (params = {}, maxLines = 50) => {
@@ -85,6 +62,7 @@ module.exports = function logsServices (logs, Sequelize) {
     };
 
     return {
+      log,
       info,
       error,
       warning,
@@ -92,6 +70,7 @@ module.exports = function logsServices (logs, Sequelize) {
       logsConfig: logs.logsConfig
     };
   }
+  // ---- logs en BD ----
   function findAll (params = {}) {
     let query = getQuery(params);
     query.where = {};
@@ -209,12 +188,12 @@ module.exports = function logsServices (logs, Sequelize) {
     }
   }
 
-  async function error (mensaje = 'Error desconocido', tipo = '', error, usuario, ip) {
+  async function log (mensaje, nivel, tipo = '', referencia, usuario, ip) {
     const data = {
-      nivel: 'ERROR',
+      nivel,
       mensaje,
       tipo,
-      referencia: formatReference(error),
+      referencia: nivel === 'ERROR' ? formatReference(referencia) : referencia,
       fecha: new Date(),
       usuario,
       ip
@@ -223,44 +202,24 @@ module.exports = function logsServices (logs, Sequelize) {
     try {
       return createOrUpdate(data);
     } catch (e) {
-      console.error(chalk.red('ERROR LOG:'), e.message, e);
+      console.error(chalk.red('LOG ERROR:', e.message, e));
+      return undefined;
     }
+  }
+
+  async function error (mensaje = 'Error desconocido', tipo = '', error, usuario, ip) {
+    const r = log(mensaje, 'ERROR', tipo, error, usuario, ip);
+    return r;
   }
 
   async function warning (mensaje, tipo = '', referencia, usuario, ip) {
-    const data = {
-      nivel: 'ADVERTENCIA',
-      mensaje,
-      tipo,
-      referencia,
-      fecha: new Date(),
-      usuario,
-      ip
-    };
-
-    try {
-      return createOrUpdate(data);
-    } catch (e) {
-      console.warn(chalk.yellow('WARNING LOG:'), e.message);
-    }
+    const r = log(mensaje, 'ADVERTENCIA', tipo, referencia, usuario, ip);
+    return r;
   }
 
   async function info (mensaje, tipo = '', referencia, usuario, ip) {
-    const data = {
-      nivel: 'INFO',
-      mensaje,
-      tipo,
-      referencia,
-      fecha: new Date(),
-      usuario,
-      ip
-    };
-
-    try {
-      return createOrUpdate(data);
-    } catch (e) {
-      console.info(chalk.cyan('INFO LOG:'), e.message);
-    }
+    const r = log(mensaje, 'INFO', tipo, referencia, usuario, ip);
+    return r;
   }
 
   return {
@@ -268,6 +227,7 @@ module.exports = function logsServices (logs, Sequelize) {
     findById,
     createOrUpdate,
     deleteItem,
+    log,
     error,
     warning,
     info

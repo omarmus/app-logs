@@ -31,7 +31,7 @@ const config = {
   logsConfig: {
     // indica que los logs se guardan en el sistema de archivos
     storage: 'filesystem',
-    // para mostrar los logs tambien en la consola
+    // para mostrar los logs también en la consola (stdout)
     console: false,
     // directorio con los logs
     outputDirectory: './logs',
@@ -64,21 +64,6 @@ const list = await logs.findAll();
 
 NOTA.- Debian Wheezy no soporta Node 8
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ``` bash
 # Para Ubuntu
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
@@ -97,6 +82,7 @@ Siga los siguientes pasos:
 # 1. Instalar dependencias
 npm install
 
-# 2. Correr test de prueba, configurar la conexión de la base de datos en el archivo src/util.js
+# 2. Correr test de prueba, configurar la variable config con la conexión de la base de datos
+# en el archivo src/util.js
 npm test
 ```
