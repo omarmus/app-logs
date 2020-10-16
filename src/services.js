@@ -7,7 +7,13 @@ module.exports = function logsServices (logs, Sequelize) {
   const Op = Sequelize.Op;
   // ----- logs en sistema de archivos -------
   if (logs.useWinston) {
-    const log = async (mensaje, level = 'info', nivel, tipo = '', referencia, usuario, ip) => {
+    const log = async (mensaje, level = 'info', tipo = '', referencia, usuario, ip) => {
+      let nivel = 'INFO';
+      if (level === 'error') {
+        nivel = 'ERROR';
+      } else if (level === 'warn') {
+        nivel = 'ADVERTENCIA';
+      }
       try {
         let r = logs.log({
           level,
@@ -27,17 +33,17 @@ module.exports = function logsServices (logs, Sequelize) {
     };
 
     const info = async (mensaje, tipo = '', referencia, usuario, ip) => {
-      const r = log(mensaje, 'info', 'INFO', tipo, referencia, usuario, ip);
+      const r = log(mensaje, 'info', tipo, referencia, usuario, ip);
       return r;
     };
 
     const error = async (mensaje, tipo = '', referencia, usuario, ip) => {
-      const r = log(mensaje, 'error', 'ERROR', tipo, referencia, usuario, ip);
+      const r = log(mensaje, 'error', tipo, referencia, usuario, ip);
       return r;
     };
 
     const warning = async (mensaje, tipo = '', referencia, usuario, ip) => {
-      const r = log(mensaje, 'warn', 'ADVERTENCIA', tipo, referencia, usuario, ip);
+      const r = log(mensaje, 'warn', tipo, referencia, usuario, ip);
       return r;
     };
 
@@ -98,9 +104,7 @@ module.exports = function logsServices (logs, Sequelize) {
     }
 
     if (params.ip) {
-      query.where.ip = {
-        [Op.iLike]: `%${params.ip}%`
-      };
+      query.where.ip = params.ip;
     }
 
     if (params.fecha) {
@@ -188,7 +192,13 @@ module.exports = function logsServices (logs, Sequelize) {
     }
   }
 
-  async function log (mensaje, nivel, tipo = '', referencia, usuario, ip) {
+  async function log (mensaje, level, tipo = '', referencia, usuario, ip) {
+    let nivel = 'INFO';
+    if (level === 'error') {
+      nivel = 'ERROR';
+    } else if (level === 'warn') {
+      nivel = 'ADVERTENCIA';
+    }
     const data = {
       nivel,
       mensaje,
@@ -208,17 +218,17 @@ module.exports = function logsServices (logs, Sequelize) {
   }
 
   async function error (mensaje = 'Error desconocido', tipo = '', error, usuario, ip) {
-    const r = log(mensaje, 'ERROR', tipo, error, usuario, ip);
+    const r = log(mensaje, 'error', tipo, error, usuario, ip);
     return r;
   }
 
   async function warning (mensaje, tipo = '', referencia, usuario, ip) {
-    const r = log(mensaje, 'ADVERTENCIA', tipo, referencia, usuario, ip);
+    const r = log(mensaje, 'warn', tipo, referencia, usuario, ip);
     return r;
   }
 
   async function info (mensaje, tipo = '', referencia, usuario, ip) {
-    const r = log(mensaje, 'INFO', tipo, referencia, usuario, ip);
+    const r = log(mensaje, 'info', tipo, referencia, usuario, ip);
     return r;
   }
 
