@@ -20,7 +20,7 @@ module.exports = function logsServices (logs, Sequelize) {
       let nivel = 'INFO';
       if (level === 'error') {
         nivel = 'ERROR';
-      } else if (level === 'warn') {
+      } else if (level === 'warn' || level === 'warning') {
         nivel = 'ADVERTENCIA';
       }
       try {
@@ -207,7 +207,7 @@ module.exports = function logsServices (logs, Sequelize) {
     let nivel = 'INFO';
     if (level === 'error') {
       nivel = 'ERROR';
-    } else if (level === 'warn') {
+    } else if (level === 'warn' || level === 'warning') {
       nivel = 'ADVERTENCIA';
     }
     const data = {
