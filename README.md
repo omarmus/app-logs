@@ -4,7 +4,9 @@ Creación, búsqueda y listado de logs, el guardado de logs se puede escoger ent
 
 1. **Logs en base de datos** (por defecto): Registra los logs en una tabla con Sequelize, Postgresql y GraphQL.
 2. **Logs en sistema de archivos**: Registra los logs en un archivo del sistema de archivos.
-3. **Logs en consola**: Manda los logs también a la salida estándar (**stdout**).
+3. **Logs en consola**: Manda los logs también a la salida estándar (**stdout**) y cuando son de nivel `error` los manda a **stderr**.
+
+Maneja tres niveles de logs: `info, warning, error`.
 
 LICENCIA: MIT License (Omar Gutiérrez C.)
 
@@ -28,6 +30,7 @@ const config = {
     // indica que los logs se guardan en el sistema de archivos
     storage: 'filesystem',
     // para mostrar los logs también en la consola (stdout) esto debería ser true
+	// Cuando se loguea con nivel 'error' el log va a stderr en lugar de stdout
     console: false,
     // directorio con los logs
     outputDirectory: './logs',
@@ -70,9 +73,9 @@ await logs.warning('Message warning');
 // - Referencia: String - Mas detalle del mensaje (sirve para hacer búsquedas)
 // - Usuario: String - Guardar con el nombre de un usuario
 // - Ip: String - Dirección ip
-await logs.log('Mensaje, 'info', 'ref-0', 'usuario1', '1.0.0.1');
-await logs.log('Mensaje de advertencia, 'warn', 'ref-0', 'usuario', '1.0.0.1');
-await logs.log('Mensaje de error, 'error', 'ref-0', 'usuario', '1.0.0.1');
+await logs.log('Mensaje', 'info', 'ref-0', 'usuario1', '1.0.0.1');
+await logs.log('Mensaje de advertencia', 'warn', 'ref-0', 'usuario', '1.0.0.1');
+await logs.log('Mensaje de error', 'error', 'ref-0', 'usuario', '1.0.0.1');
 
 ```
 Ver más ejemplos de uso en [tests](tests/).

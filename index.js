@@ -92,6 +92,7 @@ module.exports = async function (config) {
       transports.push(new winston.transports.Console(
         {
           level,
+          stderrLevels: ['error'], // mandar logs de nivel error a stderr en lugar de stdout
           format: winston.format.combine(
             winston.format.colorize(),
             winston.format.simple()
