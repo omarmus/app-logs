@@ -28,17 +28,23 @@ const Logs = require('app-logs');
 const config = {
   logsConfig: {
     // indica que los logs se guardan en el sistema de archivos
+	// posibles: 'filesystem', 'database'
     storage: 'filesystem',
+
     // para mostrar los logs también en la consola (stdout) esto debería ser true
 	// Cuando se loguea con nivel 'error' el log va a stderr en lugar de stdout
     console: false,
+
     // directorio con los logs
     outputDirectory: './logs',
+
     // nombre de archivo de logs
     outputFilename: 'logs.log',
+
     // formato de logs, con algunas de las opciones de winston (combined, interpolation, json)
     format: 'combined',
-    // nivel de verbosidad, posibles: error, info, warning, debug
+
+    // nivel de logs por defecto, posibles: error, info, warning, debug. (info por defecto)
     level: 'info'
   }
 };
@@ -77,11 +83,14 @@ await logs.log('Mensaje', 'info', 'ref-0', 'usuario1', '1.0.0.1');
 await logs.log('Mensaje de advertencia', 'warn', 'ref-0', 'usuario', '1.0.0.1');
 await logs.log('Mensaje de error', 'error', 'ref-0', 'usuario', '1.0.0.1');
 
+// guardara usando el nivel de logs por defecto y las demás opciones vacías
+await logs.log('Mensaje');
+
 ```
 Ver más ejemplos de uso en [tests](tests/).
 
 Consultar logs:
-```
+```js
 // Lista completa de logs, puede recibir parámetros de búsqueda entre otras opciones
 let list = await logs.findAll();
 

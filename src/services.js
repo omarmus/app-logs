@@ -5,9 +5,18 @@ const { getQuery, getLogLines, getQueryFsLogs } = require('./util');
 
 module.exports = function logsServices (logs, Sequelize) {
   const Op = Sequelize.Op;
+
+  if (!logs.logsConfig) {
+    logs.logsConfig = {
+      level: 'info'
+    };
+  }
+
   // ----- logs en sistema de archivos -------
   if (logs.useWinston) {
-    const log = async (mensaje, level = 'info', tipo = '', referencia, usuario, ip) => {
+    const log = async (
+      mensaje, level = logs.logsConfig.level, tipo = '',
+      referencia = '', usuario = '', ip = '') => {
       let nivel = 'INFO';
       if (level === 'error') {
         nivel = 'ERROR';
@@ -192,7 +201,9 @@ module.exports = function logsServices (logs, Sequelize) {
     }
   }
 
-  async function log (mensaje, level, tipo = '', referencia, usuario, ip) {
+  async function log (
+    mensaje, level = logs.logsConfig.level || 'info', tipo = '',
+    referencia = '', usuario = '', ip = '') {
     let nivel = 'INFO';
     if (level === 'error') {
       nivel = 'ERROR';

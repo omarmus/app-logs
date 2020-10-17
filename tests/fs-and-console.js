@@ -50,3 +50,8 @@ test.serial('fs-and-console#warning - create', async t => {
   let log = await logs.warning('Mensaje de prueba warn', 'ref-fc-1', 'usuario test', '0.0.0.1');
   t.true(log !== undefined);
 });
+
+test.serial('fs-and-console#log - general', async t => {
+  let log = await logs.log('Mensaje de prueba general');
+  t.true(log !== undefined);
+});

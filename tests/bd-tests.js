@@ -171,6 +171,20 @@ test.serial('bd#log - new error', async t => {
   test.idLog3 = log.id;
 });
 
+test.serial('bd#log - mensaje con nivel de logs por defecto', async t => {
+  const log = await logs.log(
+    'Prueba mensaje' // mensaje
+  );
+  t.true(typeof log.id === 'number', 'El nuevo log tiene id');
+  t.is(log.tipo, '', 'Creando registro - tipo');
+  t.is(log.nivel, 'INFO', 'Creando registro - level');
+  t.is(log.mensaje, 'Prueba mensaje', 'Creando registro - mensaje');
+  t.is(log.referencia, '', 'Creando registro - referencia');
+  t.is(log.usuario, '', 'Creando registro - usuario');
+  t.is(log.ip, '', 'Creando registro - ip');
+  test.idLog4 = log.id;
+});
+
 test.serial('bd#error', async t => {
   const err = new Error('Probando mensaje de error');
   let log = await logs.error(err.message, 'ERROR DB', err, 'usuario test', '200.168.192.1');
@@ -204,4 +218,11 @@ test.serial('bd#delete 4', async t => {
   let deleted = await logs.deleteItem(test.idLog3);
 
   t.true(deleted, 'log 4 eliminado');
+});
+
+test.serial('bd#delete 5', async t => {
+  await logs.deleteItem(test.idLog1);
+  let deleted = await logs.deleteItem(test.idLog4);
+
+  t.true(deleted, 'log 5 eliminado');
 });

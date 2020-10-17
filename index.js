@@ -38,10 +38,9 @@ module.exports = async function (config) {
       {
       // para mostrar los logs tambien en la consola (stdout)
       console: false,
-      // Donde se guardan los logs:
+      // Donde se guardan los logs de forma permanente:
       // - database: Para guardar logs en base de datos
       // - filesystem: Para guardar logs en sistema de archivos
-      // - stdout: Para transportar los logs a la salida estándar (Console)
       storage: 'database',
       // Las siguientes opciones son para cuando se usa storage = 'filesystem'
       outputDirectory: './logs',

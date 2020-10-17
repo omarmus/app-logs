@@ -26,6 +26,12 @@ test.serial('fs#log - create', async t => {
   t.true(log !== undefined);
 });
 
+test.serial('fs#log - create default log level', async t => {
+  let log = await logs.log('Mensaje de prueba');
+  // console.log('.......', log);
+  t.true(log !== undefined);
+});
+
 test.serial('fs#info - create', async t => {
   let log = logs.info('Mensaje de prueba', 'prueba', 'ref1', 'usuario test', '0.0.0.0');
   log = logs.info('msj de prueba', 'prueba', 'ref2', 'usuario test', '0.0.0.0');
