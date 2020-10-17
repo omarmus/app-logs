@@ -44,7 +44,7 @@ const config = {
     // formato de logs, con algunas de las opciones de winston (combined, interpolation, json)
     format: 'combined',
 
-    // nivel de logs por defecto, posibles: error, info, warning, debug. (info por defecto)
+    // nivel de logs por defecto, posibles: error, info, warning. (info por defecto)
     level: 'info'
   }
 };
