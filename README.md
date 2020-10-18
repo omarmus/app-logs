@@ -80,7 +80,7 @@ await logs.warning('Message warning');
 // - Referencia: String - Mas detalle del mensaje (sirve para hacer búsquedas)
 // - Usuario: String - Guardar con el nombre de un usuario
 // - Ip: String - Dirección ip
-await logs.log('Mensaje', 'info', 'API,'ref-0', 'usuario1', '1.0.0.1');
+await logs.log('Mensaje', 'info', 'API','ref-0', 'usuario1', '1.0.0.1');
 await logs.log('Mensaje de advertencia', 'warn', 'GRAPHQL','ref-0', 'usuario', '1.0.0.1');
 await logs.log('Mensaje de error', 'error', 'ref-0', 'DATABASE', 'usuario', '1.0.0.1');
 
