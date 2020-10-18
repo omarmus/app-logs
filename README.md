@@ -76,12 +76,13 @@ await logs.warning('Message warning');
 // Pasando el nivel de logs manualmente se pueden agregar detalles: 
 // - Mensaje: String - Texto del mensaje
 // - Nivel de logs: String solo con los valores "info", "warn" o "error"
+// - tipo: String - Tipo de log (sirve para hacer búsquedas)
 // - Referencia: String - Mas detalle del mensaje (sirve para hacer búsquedas)
 // - Usuario: String - Guardar con el nombre de un usuario
 // - Ip: String - Dirección ip
-await logs.log('Mensaje', 'info', 'ref-0', 'usuario1', '1.0.0.1');
-await logs.log('Mensaje de advertencia', 'warn', 'ref-0', 'usuario', '1.0.0.1');
-await logs.log('Mensaje de error', 'error', 'ref-0', 'usuario', '1.0.0.1');
+await logs.log('Mensaje', 'info', 'API,'ref-0', 'usuario1', '1.0.0.1');
+await logs.log('Mensaje de advertencia', 'warn', 'GRAPHQL','ref-0', 'usuario', '1.0.0.1');
+await logs.log('Mensaje de error', 'error', 'ref-0', 'DATABASE', 'usuario', '1.0.0.1');
 
 // guardara usando el nivel de logs por defecto y las demás opciones vacías
 await logs.log('Mensaje');
