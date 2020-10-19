@@ -87,6 +87,10 @@ await logs.log('Mensaje de error', 'error', 'ref-0', 'DATABASE', 'usuario', '1.0
 // guardara usando el nivel de logs por defecto y las demás opciones vacías
 await logs.log('Mensaje');
 
+// logs.[info|error|warning](mensaje, tipo, referencia, usuario, ip)
+// todos los parámetros son opcionales menos 'mensaje', ej.
+logs.info('Mensaje de info', 'ACTUALIZACIÓN');
+logs.error('Mensaje de error, 'ACTUALIZACIÓN', 'Doc con id 100', '', '10.100.122.125');
 ```
 Ver más ejemplos de uso en [tests](tests/).
 
