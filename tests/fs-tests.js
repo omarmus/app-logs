@@ -20,23 +20,35 @@ test.before(async () => {
   });
 });
 
-test.serial('Log-fs#info - create', async t => {
+test.serial('fs#log - create', async t => {
+  let log = await logs.log('Mensaje de prueba', 'info', 'tipoPrueba', 'ref1', 'usuario test', '0.0.0.0');
+  // console.log('.......', log);
+  t.true(log !== undefined);
+});
+
+test.serial('fs#log - create default log level', async t => {
+  let log = await logs.log('Mensaje de prueba');
+  // console.log('.......', log);
+  t.true(log !== undefined);
+});
+
+test.serial('fs#info - create', async t => {
   let log = logs.info('Mensaje de prueba', 'prueba', 'ref1', 'usuario test', '0.0.0.0');
   log = logs.info('msj de prueba', 'prueba', 'ref2', 'usuario test', '0.0.0.0');
   t.true(log !== undefined);
 });
 
-test.serial('Log-fs#error - create', async t => {
+test.serial('fs#error - create', async t => {
   let log = logs.error('Mensaje de error prueba', 'prueba', 'ref2', 'usuario test', '0.0.0.0');
   t.true(log !== undefined);
 });
 
-test.serial('Log-fs#warning - create', async t => {
+test.serial('fs#warning - create', async t => {
   let log = logs.warning('Mensaje de advertencia de prueba', 'prueba', 'ref1', 'usuario test', '0.0.0.0');
   t.true(log !== undefined);
 });
 
-test.serial('Log-fs#filter - level: info', async t => {
+test.serial('fs#filter - level: info', async t => {
   const fs = require('fs');
   const path = require('path');
   fs.closeSync(fs.openSync(path.join(logs.logsConfig.outputDirectory, logs.logsConfig.outputFilename), 'a'));
@@ -49,7 +61,7 @@ test.serial('Log-fs#filter - level: info', async t => {
   t.true(Array.isArray(logsRead));
 });
 
-test.serial('Log-fs#filter - level: info, referencia: ref1', async t => {
+test.serial('fs#filter - level: info, referencia: ref1', async t => {
   let logsRead = await util.getLogLines(
     { level: 'info', referencia: 'ref1' },
     50,
@@ -58,20 +70,20 @@ test.serial('Log-fs#filter - level: info, referencia: ref1', async t => {
   t.true(logsRead.length >= 1);
 });
 
-test.serial('Log-fs#findAll', async t => {
+test.serial('fs#findAll', async t => {
   let r = await logs.findAll();
   // console.log('r::', r);
   t.true(r.code === 1);
   t.true(r.data.count >= 1);
 });
 
-test.serial('Log-fs#findAll - level:info', async t => {
+test.serial('fs#findAll - level:info', async t => {
   let r = await logs.findAll({ level: 'info' });
   t.true(r.code === 1);
   t.true(r.data.count >= 1);
 });
 
-test.serial('Log-fs#findAll - level:info, referencia: ref2', async t => {
+test.serial('fs#findAll - level:info, referencia: ref2', async t => {
   let r = await logs.findAll({ level: 'info', referencia: 'ref2' });
   t.true(r.code === 1);
   t.true(r.data.count >= 1);
