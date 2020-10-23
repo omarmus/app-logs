@@ -146,16 +146,19 @@ module.exports = function logsServices (logs, Sequelize) {
         id: rol.id
       }
     };
+    try {
+      const item = await logs.findOne(cond);
 
-    const item = await logs.findOne(cond);
+      if (item) {
+        const updated = await logs.update(rol, cond);
+        return updated ? logs.findOne(cond) : item;
+      }
 
-    if (item) {
-      const updated = await logs.update(rol, cond);
-      return updated ? logs.findOne(cond) : item;
+      const result = await logs.create(rol);
+      return result.toJSON();
+    } catch (e) {
+      throw e;
     }
-
-    const result = await logs.create(rol);
-    return result.toJSON();
   }
 
   async function deleteItem (id) {
@@ -220,12 +223,16 @@ module.exports = function logsServices (logs, Sequelize) {
       ip
     };
 
-    try {
-      return createOrUpdate(data);
-    } catch (e) {
-      console.error(chalk.red('LOG ERROR:', e.message, e));
-      return undefined;
-    }
+    let r;
+    r = createOrUpdate(data)
+      .then((r) => {
+        return r;
+      })
+      .catch((err) => {
+        console.error(chalk.red('LOG ERROR:', err.message));
+        return undefined;
+      });
+    return r;
   }
 
   async function error (mensaje = 'Error desconocido', tipo = '', error, usuario, ip) {
