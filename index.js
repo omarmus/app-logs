@@ -10,6 +10,7 @@ const fs = require('fs');
 
 module.exports = async function (config) {
   let logs;
+
   if (!config.logsConfig) {
     // logs en base de datos
     config = defaults(config, {
@@ -26,11 +27,17 @@ module.exports = async function (config) {
     // Cargando modelo
     logs = sequelize.import('src/model');
 
-    // Verificando conexión con la BD
-    await sequelize.authenticate();
+    try {
+      // Verificando conexión con la BD
+      await sequelize.authenticate();
 
-    // Creando las tablas
-    await sequelize.sync();
+      // Creando las tablas
+      await sequelize.sync();
+    } catch (e) {
+      // Algun error con la base de datos
+      console.error('[app-logs] Error al interactuar con la BD:', e.message);
+      // console.error(e);
+    }
   } else {
     // logs en sistema de archivos
     // analizando config, formato esperado
@@ -101,13 +108,18 @@ module.exports = async function (config) {
     }
 
     // creando la instancia de winston
-    logs = winston.createLogger({
-      level,
-      format,
-      transports
-    });
-    logs.useWinston = true; // bandera
-    logs.logsConfig = logsConfig;
+    try {
+      logs = winston.createLogger({
+        level,
+        format,
+        transports
+      });
+      logs.useWinston = true; // bandera
+      logs.logsConfig = logsConfig;
+    } catch (e) {
+      console.error('[app-logs] Error iniciando winston:', e.message);
+      // console.error(e);
+    }
   }
 
   // Cargando los servicios de logs

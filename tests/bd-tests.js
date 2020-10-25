@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const { config, handleFatalError } = require('../src/util');
+let { config, handleFatalError } = require('../src/util');
 const Log = require('../');
 
 let logs;
@@ -225,4 +225,17 @@ test.serial('bd#delete 5', async t => {
   let deleted = await logs.deleteItem(test.idLog4);
 
   t.true(deleted, 'log 5 eliminado');
+});
+
+test.serial('bd#desconexionError - deberia dar error al fallar la conexion con la BD', async t => {
+  // reconectandose a la BD
+  logs = await Log({
+    database: 'WsomeRandomNombre',
+    username: parseInt(Math.random() * 1000) + '_db',
+    password: parseInt(Math.random() * 1000) + 'password',
+    host: 'localhost'
+  }).catch(handleFatalError);
+
+  const log = await logs.info('No se guarda');
+  t.is(log, undefined, 'No se pudo guardar logs logs');
 });
